@@ -27,7 +27,8 @@ SOURCES += \
     MyStrategy.cpp \
     RemoteProcessClient.cpp \
     Runner.cpp \
-    Strategy.cpp
+    Strategy.cpp \
+    mycode.cpp
 
 DISTFILES +=
 
@@ -58,5 +59,6 @@ HEADERS += \
     MyStrategy.h \
     RemoteProcessClient.h \
     Runner.h \
-    Strategy.h
+    Strategy.h \
+    mycode.h
 
