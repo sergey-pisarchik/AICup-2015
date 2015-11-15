@@ -7,6 +7,10 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
+win32 {
+LIBS += -lwsock32
+}
+
 SOURCES += \
     csimplesocket/ActiveSocket.cpp \
     csimplesocket/HTTPActiveSocket.cpp \
