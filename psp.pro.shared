@@ -118,7 +118,7 @@
      </valuemap>
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.2">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
-      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments">-r psp.zip *.{h,cpp}</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments">-r psp_r.zip *.{h,cpp}</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.Command">zip</value>
       <value type="QString" key="ProjectExplorer.ProcessStep.WorkingDirectory">%{sourceDir}</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Custom Process Step</value>
