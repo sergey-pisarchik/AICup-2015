@@ -4,8 +4,10 @@ QT -= gui
 TARGET = psp
 CONFIG += console
 CONFIG -= app_bundle
+CONFIG += c++11
 
 TEMPLATE = app
+
 
 win32 {
 LIBS += -lwsock32
@@ -32,7 +34,9 @@ SOURCES += \
     RemoteProcessClient.cpp \
     Runner.cpp \
     Strategy.cpp \
-    mycode.cpp
+    MyCode.cpp \
+    PathUtils.cpp \
+    CommonDefines.cpp
 
 DISTFILES +=
 
@@ -64,5 +68,7 @@ HEADERS += \
     RemoteProcessClient.h \
     Runner.h \
     Strategy.h \
-    mycode.h
+    PathUtils.h \
+    MyCode.h \
+    CommonDefines.h
 
