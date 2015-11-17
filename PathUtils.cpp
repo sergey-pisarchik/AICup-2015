@@ -65,7 +65,7 @@ bool CanPass(TMap const & map, Cell const & start, Cell const & finish)
     return false;
 }
 
-void WSF(TMap const & maze, Cell const & cur, Cell const & prev, Cell const & target, std::map<Cell, pair<int, Cell>> & data)
+void DSF(TMap const & maze, Cell const & cur, Cell const & prev, Cell const & target, std::map<Cell, pair<int, Cell>> & data)
 {
     if (cur == target)
     {
@@ -98,7 +98,7 @@ void WSF(TMap const & maze, Cell const & cur, Cell const & prev, Cell const & ta
         for (auto dir: AllDirections())
         {
             if (CanPass(maze, cur, cur.GetNeibor(dir)))
-                WSF(maze, cur.GetNeibor(dir), cur, target, data);
+                DSF(maze, cur.GetNeibor(dir), cur, target, data);
         }
 
 }
@@ -110,7 +110,7 @@ vector<Cell> GetClosestPath(const model::World& world, Cell start, Cell finish)
     for (auto dir: AllDirections())
     {
         if (CanPass(world.getTilesXY(), start, start.GetNeibor(dir)))
-            WSF(world.getTilesXY(), start.GetNeibor(dir), start, finish, data);
+            DSF(world.getTilesXY(), start.GetNeibor(dir), start, finish, data);
     }
     vector<Cell> res(1, finish);
     Cell cur = finish;

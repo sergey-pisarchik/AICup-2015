@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 #include "model/Bonus.h"
 #include "model/Car.h"
