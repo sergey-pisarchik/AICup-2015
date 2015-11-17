@@ -69,7 +69,15 @@ void WSF(TMap const & maze, Cell const & cur, Cell const & prev, Cell const & ta
 {
     if (cur == target)
     {
-        data[target] = {data[prev].first + 1, prev};
+        if (data.count(target) ==1)
+        {
+            if (data[target].first + 1 > data[prev].first + 1 )
+                data[target] = {data[prev].first + 1, prev};
+        }
+        else
+        {
+            data[target] = {data[prev].first + 1, prev};
+        }
         return;
     }
     bool bImprooved = false;

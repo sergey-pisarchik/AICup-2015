@@ -19,4 +19,11 @@ public:
 
 Cell GetCell(double const dX, double const dY, Game const & game);
 
+template <class TAr>
+TAr & operator<< (TAr & ar, Cell const & cell)
+{
+    ar << cell.m_x << " " << cell.m_y;
+    return ar;
+}
+
 #endif // CELL_H

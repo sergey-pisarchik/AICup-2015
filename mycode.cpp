@@ -4,9 +4,27 @@
 #include "CommonDefines.h"
 #include "Cell.h"
 #include "PathUtils.h"
+using namespace std;
+
+void PrintMap(TMap const & mp)
+{
+    for (auto & vr: mp)
+    {
+        for (auto & val: vr)
+        {
+            if (val == EMPTY)
+                cout << "#";
+            else
+                cout << ".";
+        }
+        cout << endl;
+    }
+}
 
 void f(const Car& self, const World& world, const Game& game, Move& move)
 {
+    if(world.getTick() == 1)
+        PrintMap(world.getTilesXY());
 //    move.setEnginePower(1.0);
 //    move.setThrowProjectile(true);
 //    move.setSpillOil(true);
@@ -19,7 +37,10 @@ void f(const Car& self, const World& world, const Game& game, Move& move)
     Cell start = GetCell(self.getX(), self.getY(), game);
 
     vector<Cell> path = GetClosestPath(world, start, finish);
-    cout << world.getTick() << " " << path[1].m_x << " " << path[1].m_y << endl;
+    cout << "s " << start << " f " << finish << " path ";
+    for (auto cell: path)
+        cout << cell << " : ";
+    cout << " target " << path[1] << endl;
 
     double nextWaypointX = (path[1].m_x + 0.5) * game.getTrackTileSize();
     double nextWaypointY = (path[1].m_y + 0.5) * game.getTrackTileSize();
