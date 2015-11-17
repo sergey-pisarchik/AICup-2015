@@ -1,17 +1,8 @@
 #include "MyCode.h"
+#include <Cell.h>
+#include <PathUtils.h>
 
-
-
-#include <cmath>
-#include <cstdlib>
-#include <math.h>
-#include <iostream>
-
-using namespace model;
-using namespace std;
-
-#define PI 3.14159265358979323846
-#define _USE_MATH_DEFINES
+#include <CommonDefines.h>
 
 void f(const Car& self, const World& world, const Game& game, Move& move)
 {
@@ -23,8 +14,14 @@ void f(const Car& self, const World& world, const Game& game, Move& move)
 //        move.setUseNitro(true);
 //    }
 
-    double nextWaypointX = (self.getNextWaypointX() + 0.5) * game.getTrackTileSize();
-            double nextWaypointY = (self.getNextWaypointY() + 0.5) * game.getTrackTileSize();
+    Cell finish = {self.getNextWaypointX(), self.getNextWaypointY()};
+    Cell start = GetCell(self.getX(), self.getY(), game);
+
+    vector<Cell> path = GetClosestPath(world, start, finish);
+    cout << world.getTick() << " " << path[1].m_x << " " << path[1].m_y << endl;
+
+    double nextWaypointX = (path[1].m_x + 0.5) * game.getTrackTileSize();
+    double nextWaypointY = (path[1].m_y + 0.5) * game.getTrackTileSize();
 
             double cornerTileOffset = 0.25 * game.getTrackTileSize();
 

@@ -8,7 +8,8 @@
 #include <cstdlib>
 #include <vector>
 #include <map>
-#include <string.h>
+#include <string>
+#include <iostream>
 
 #include <model/Bonus.h>
 #include <model/Car.h>
@@ -23,12 +24,6 @@
 using namespace model;
 using namespace std;
 
-struct Cell
-{
-public:
-    int m_x;
-    int m_y;
-};
 
 std::vector<Direction> const &  AllDirections();
 

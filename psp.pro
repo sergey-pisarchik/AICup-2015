@@ -36,7 +36,8 @@ SOURCES += \
     Strategy.cpp \
     MyCode.cpp \
     PathUtils.cpp \
-    CommonDefines.cpp
+    CommonDefines.cpp \
+    Cell.cpp
 
 DISTFILES +=
 
@@ -70,5 +71,6 @@ HEADERS += \
     Strategy.h \
     PathUtils.h \
     MyCode.h \
-    CommonDefines.h
+    CommonDefines.h \
+    Cell.h
 

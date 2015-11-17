@@ -2,6 +2,7 @@
 #define PATHUTILS
 
 #include <CommonDefines.h>
+#include <Cell.h>
 
 
 std::vector<Cell> GetClosestPath(const model::World& world, Cell start, Cell finish);
