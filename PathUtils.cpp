@@ -42,14 +42,6 @@ TileType GetCellType(TMap const & map, Cell const & cell)
     return map[cell.m_x][cell.m_y];
 }
 
-bool CanPass(TMap const & map, Cell const & start, Cell const & finish)
-{
-    for (auto dir: AllDirections())
-        if (IsDirectionOpen(GetCellType(map, start), dir) && IsDirectionOpen(GetCellType(map, finish), GetOppositeDirection(dir)))
-            return true;
-    return false;
-}
-
 bool IsValidCell(TMap const & map, Cell const & cell)
 {
     if (cell.m_x < 0)
@@ -61,6 +53,16 @@ bool IsValidCell(TMap const & map, Cell const & cell)
     if (cell.m_y >= map.size())
         return false;
     return true;
+}
+
+bool CanPass(TMap const & map, Cell const & start, Cell const & finish)
+{
+    if (!IsValidCell(map, finish))
+        return false;
+    for (auto dir: AllDirections())
+        if (IsDirectionOpen(GetCellType(map, start), dir) && IsDirectionOpen(GetCellType(map, finish), GetOppositeDirection(dir)))
+            return true;
+    return false;
 }
 
 void WSF(TMap const & maze, Cell const & cur, Cell const & prev, Cell const & target, std::map<Cell, pair<int, Cell>> & data)
@@ -100,7 +102,7 @@ vector<Cell> GetClosestPath(const model::World& world, Cell start, Cell finish)
     for (auto dir: AllDirections())
     {
         if (CanPass(world.getTilesXY(), start, start.GetNeibor(dir)))
-            WSF(world.getTilesXY(), start, start.GetNeibor(dir), finish, data);
+            WSF(world.getTilesXY(), start.GetNeibor(dir), start, finish, data);
     }
     vector<Cell> res(1, finish);
     Cell cur = finish;
