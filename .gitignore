@@ -1,5 +1,6 @@
 *.o
 *.pro.user
 .DS_Store
+*.zip
 /PSP/
 
