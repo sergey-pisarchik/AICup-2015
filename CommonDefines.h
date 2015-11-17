@@ -11,15 +11,15 @@
 #include <string>
 #include <iostream>
 
-#include <model/Bonus.h>
-#include <model/Car.h>
-#include <model/CarType.h>
-#include <model/BonusType.h>
-#include <model/Game.h>
-#include <model/Move.h>
-#include <model/World.h>
-#include <model/Player.h>
-#include <model/Direction.h>
+#include "model/Bonus.h"
+#include "model/Car.h"
+#include "model/CarType.h"
+#include "model/BonusType.h"
+#include "model/Game.h"
+#include "model/Move.h"
+#include "model/World.h"
+#include "model/Player.h"
+#include "model/Direction.h"
 
 using namespace model;
 using namespace std;

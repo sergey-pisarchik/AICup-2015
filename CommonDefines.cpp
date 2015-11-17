@@ -1,5 +1,5 @@
 
-#include <CommonDefines.h>
+#include "CommonDefines.h"
 
 vector<Direction> const &  AllDirections()
 {

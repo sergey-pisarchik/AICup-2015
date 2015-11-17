@@ -23,12 +23,12 @@ bool Cell::operator<(Cell const & other) const
 Cell Cell::GetNeibor(Direction const dir) const
 {
     switch (dir) {
-    case LEFT:
-
-        break;
-    default:
-        break;
+        case LEFT  : return {m_x - 1, m_y};
+        case RIGHT  : return {m_x + 1, m_y};
+        case UP   :return {m_x, m_y + 1};
+        case DOWN  : return {m_x, m_y - 1};
     }
+    return {7,7};
 }
 
 Cell GetCell(double const dX, double const dY, Game const & game)

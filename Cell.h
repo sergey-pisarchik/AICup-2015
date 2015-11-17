@@ -1,7 +1,7 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include <CommonDefines.h>
+#include "CommonDefines.h"
 using namespace model;
 
 struct Cell

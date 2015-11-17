@@ -1,5 +1,5 @@
 
-#include <PathUtils.h>
+#include "PathUtils.h"
 
 Direction GetOppositeDirection(Direction dir)
 {
@@ -70,18 +70,26 @@ void WSF(TMap const & maze, Cell const & cur, Cell const & prev, Cell const & ta
         data[target] = {data[prev].first + 1, prev};
         return;
     }
+    bool bImprooved = false;
     if (data.count(cur) == 0)
+    {
         data[cur] = {data[prev].first + 1, prev};
+        bImprooved = true;
+    }
     else
     {
         if (data[cur].first + 1 > data[prev].first + 1)
+        {
             data[cur] = {data[prev].first + 1, prev};
+            bImprooved = true;
+        }
     }
-    for (auto dir: AllDirections())
-    {
-        if (CanPass(maze, cur, cur.GetNeibor(dir)))
-            WSF(maze, cur.GetNeibor(dir), cur, target, data);
-    }
+    if (bImprooved)
+        for (auto dir: AllDirections())
+        {
+            if (CanPass(maze, cur, cur.GetNeibor(dir)))
+                WSF(maze, cur.GetNeibor(dir), cur, target, data);
+        }
 
 }
 
