@@ -5,7 +5,8 @@
 #include "Cell.h"
 
 
-std::vector<Cell> GetClosestPath(const model::World& world, Cell start, Cell finish);
+vector<Cell> GetClosestPath(const model::World& world,
+                              Cell const & start, Cell const & finish);
 TileType GetCellType(TMap const & map, Cell const & cell);
 
 #endif // PATHUTILS
