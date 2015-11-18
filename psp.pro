@@ -38,7 +38,8 @@ SOURCES += \
     MyCode.cpp \
     PathUtils.cpp \
     CommonDefines.cpp \
-    Cell.cpp
+    Cell.cpp \
+    DebugFunctions.cpp
 
 DISTFILES +=
 
@@ -73,5 +74,6 @@ HEADERS += \
     PathUtils.h \
     MyCode.h \
     CommonDefines.h \
-    Cell.h
+    Cell.h \
+    DebugFunctions.h
 
