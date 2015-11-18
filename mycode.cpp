@@ -35,15 +35,17 @@ void f(const Car& self, const World& world, const Game& game, Move& move)
     cout << " target " << path[1] << endl;
 #endif
     
-    while (path.size() < 2)
+    while (path.size() < 3)
         path.push_back(path.back());
 
-    double nextWaypointX = (path[1].m_x + 0.5) * game.getTrackTileSize();
-    double nextWaypointY = (path[1].m_y + 0.5) * game.getTrackTileSize();
+    Cell nextTarget = path[2];
+
+    double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
+    double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
 
             double cornerTileOffset = 0.25 * game.getTrackTileSize();
 
-            switch (world.getTilesXY()[self.getNextWaypointX()][self.getNextWaypointY()])
+            switch (GetCellType(world.getTilesXY(), nextTarget))
             {
                 case LEFT_TOP_CORNER:
                     nextWaypointX += cornerTileOffset;
