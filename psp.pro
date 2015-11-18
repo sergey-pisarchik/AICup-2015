@@ -10,6 +10,7 @@ TEMPLATE = app
 
 
 win32 {
+DEFINES += WIN32
 LIBS += -lwsock32
 }
 
