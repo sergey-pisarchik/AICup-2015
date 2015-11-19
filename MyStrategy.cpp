@@ -6,20 +6,40 @@
 
 using namespace std;
 
-void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move) {
+int const BACWARD_DUR = 65;
+
+void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move)
+{
+    if (world.getTick() < 181)
+        return;
 #ifdef LOG
     if(world.getTick() == 1)
         PrintMap(world.getTilesXY());
 #endif
-    //    move.setEnginePower(1.0);
-    //    move.setThrowProjectile(true);
-    //    move.setSpillOil(true);
+//        move.setEnginePower(1.0);
+        move.setThrowProjectile(true);
+        move.setSpillOil(true);
+        move.setUseNitro(true);
+
+        if (m_bBackwardMove)
+            return BackwardMove(self, world, game, move);
+        m_ForvardTick++;
+        double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
+        if (m_ForvardTick > 10)
+            if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
+            {
+                m_bBackwardMove = true;
+                m_BacwardTick = 65;
+                m_BackwardWheelAngle = -self.getWheelTurn();
+                return BackwardMove(self, world, game, move);
+            }
+        m_dPrevSpeed = speedModule;
     
     //    if (world.getTick() > game.getInitialFreezeDurationTicks()) {
     //        move.setUseNitro(true);
     //    }
     
-    auto wp = world.getWaypoints();
+
     
     Cell finish = {self.getNextWaypointX(), self.getNextWaypointY()};
     Cell start = GetCell(self.getX(), self.getY(), game);
@@ -73,11 +93,12 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             nextWaypointY -= cornerTileOffset;
             break;
     }
-    
+
     double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
-    double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
+
     
     move.setWheelTurn(angleToWaypoint * 32.0 / PI);
+//    move.setWheelTurn(1);
     move.setEnginePower(0.75);
     
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
@@ -85,6 +106,28 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     //                move.setBrake(true);
     //            }
 
+}
+
+
+void MyStrategy::BackwardMove(const model::Car& self, const model::World& world,
+                  const model::Game& game, model::Move& move)
+{
+    m_BacwardTick--;
+    if (m_BacwardTick < 0)
+    {
+        m_bBackwardMove = false;
+        move.setEnginePower(0.75);
+        move.setWheelTurn(0);
+        m_ForvardTick = 0;
+    }
+    else
+    {
+         move.setEnginePower(-1);
+         if (m_BacwardTick < BACWARD_DUR / 3)
+             move.setWheelTurn(0);
+         else
+            move.setWheelTurn(m_BackwardWheelAngle);
+    }
 }
 
 MyStrategy::MyStrategy() { }
