@@ -73,27 +73,27 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
     double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
     
-    double cornerTileOffset = 0.25 * game.getTrackTileSize();
+    double cornerTileOffset = 0.15 * game.getTrackTileSize();
     
-    switch (GetCellType(world.getTilesXY(), nextTarget))
-    {
-        case LEFT_TOP_CORNER:
-            nextWaypointX += cornerTileOffset;
-            nextWaypointY += cornerTileOffset;
-            break;
-        case RIGHT_TOP_CORNER:
-            nextWaypointX -= cornerTileOffset;
-            nextWaypointY += cornerTileOffset;
-            break;
-        case LEFT_BOTTOM_CORNER:
-            nextWaypointX += cornerTileOffset;
-            nextWaypointY -= cornerTileOffset;
-            break;
-        case RIGHT_BOTTOM_CORNER:
-            nextWaypointX -= cornerTileOffset;
-            nextWaypointY -= cornerTileOffset;
-            break;
-    }
+//    switch (GetCellType(world.getTilesXY(), nextTarget))
+//    {
+//        case LEFT_TOP_CORNER:
+//            nextWaypointX += cornerTileOffset;
+//            nextWaypointY += cornerTileOffset;
+//            break;
+//        case RIGHT_TOP_CORNER:
+//            nextWaypointX -= cornerTileOffset;
+//            nextWaypointY += cornerTileOffset;
+//            break;
+//        case LEFT_BOTTOM_CORNER:
+//            nextWaypointX += cornerTileOffset;
+//            nextWaypointY -= cornerTileOffset;
+//            break;
+//        case RIGHT_BOTTOM_CORNER:
+//            nextWaypointX -= cornerTileOffset;
+//            nextWaypointY -= cornerTileOffset;
+//            break;
+//    }
 
     double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
 
