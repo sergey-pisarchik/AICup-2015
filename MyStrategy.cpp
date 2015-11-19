@@ -10,8 +10,7 @@ int const BACWARD_DUR = 65;
 
 void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move)
 {
-    if (world.getTick() < 181)
-        return;
+
 #ifdef LOG
     if(world.getTick() == 1)
         PrintMap(world.getTilesXY());
@@ -19,13 +18,15 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
 //        move.setEnginePower(1.0);
         move.setThrowProjectile(true);
         move.setSpillOil(true);
-        move.setUseNitro(true);
+//        move.setUseNitro(true);
 
         if (m_bBackwardMove)
             return BackwardMove(self, world, game, move);
         m_ForvardTick++;
         double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
-        if (m_ForvardTick > 10)
+
+
+        if (m_ForvardTick > 10 && world.getTick() > 230)
             if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
             {
                 m_bBackwardMove = true;
