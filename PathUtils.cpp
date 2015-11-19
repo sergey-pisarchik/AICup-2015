@@ -29,10 +29,10 @@ bool IsDirectionOpen(TileType const ttype, Direction dir)
                 || ttype == RIGHT_HEADED_T || ttype == BOTTOM_HEADED_T || ttype == TOP_HEADED_T);
     case UP:
         return (ttype == VERTICAL || ttype == LEFT_BOTTOM_CORNER || ttype == RIGHT_BOTTOM_CORNER
-                || ttype == LEFT_HEADED_T || ttype == BOTTOM_HEADED_T || ttype == RIGHT_HEADED_T);
+                || ttype == LEFT_HEADED_T || ttype == TOP_HEADED_T || ttype == RIGHT_HEADED_T);
     case DOWN:
         return (ttype == VERTICAL || ttype == RIGHT_TOP_CORNER || ttype == LEFT_TOP_CORNER
-                || ttype == LEFT_HEADED_T || ttype == RIGHT_HEADED_T || ttype == TOP_HEADED_T);
+                || ttype == LEFT_HEADED_T || ttype == RIGHT_HEADED_T || ttype == BOTTOM_HEADED_T);
     }
     return false;
 }
