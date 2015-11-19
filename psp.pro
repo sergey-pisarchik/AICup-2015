@@ -35,7 +35,6 @@ SOURCES += \
     RemoteProcessClient.cpp \
     Runner.cpp \
     Strategy.cpp \
-    MyCode.cpp \
     PathUtils.cpp \
     CommonDefines.cpp \
     Cell.cpp \
@@ -72,7 +71,6 @@ HEADERS += \
     Runner.h \
     Strategy.h \
     PathUtils.h \
-    MyCode.h \
     CommonDefines.h \
     Cell.h \
     DebugFunctions.h
