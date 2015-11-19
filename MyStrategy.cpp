@@ -42,6 +42,8 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     cout << " target " << path[1] << endl;
 #endif
     
+    if (path.empty())
+        path.push_back({0,0});
     while (path.size() < 3)
         path.push_back(path.back());
     
