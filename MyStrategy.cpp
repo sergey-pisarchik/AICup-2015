@@ -6,7 +6,7 @@
 
 using namespace std;
 
-int const BACWARD_DUR = 65;
+int const BACWARD_DUR = 125;
 
 void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move)
 {
@@ -26,11 +26,11 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
 
 
-        if (m_ForvardTick > 10 && world.getTick() > 230)
+        if (m_ForvardTick > 30 && world.getTick() > 230)
             if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
             {
                 m_bBackwardMove = true;
-                m_BacwardTick = 65;
+                m_BacwardTick = BACWARD_DUR;
                 m_BackwardWheelAngle = -self.getWheelTurn();
                 return BackwardMove(self, world, game, move);
             }
@@ -125,9 +125,16 @@ void MyStrategy::BackwardMove(const model::Car& self, const model::World& world,
     {
          move.setEnginePower(-1);
          if (m_BacwardTick < BACWARD_DUR / 3)
+         {
+             move.setEnginePower(1);
              move.setWheelTurn(0);
+             
+         }
          else
-            move.setWheelTurn(m_BackwardWheelAngle);
+            move.setWheelTurn(0);
+        if (m_BacwardTick < BACWARD_DUR / 6)
+            move.setBrake(true);
+            
     }
 }
 
