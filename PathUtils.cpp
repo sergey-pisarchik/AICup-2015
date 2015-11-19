@@ -55,13 +55,13 @@ bool IsValidCell(TMap const & map, Cell const & cell)
     return true;
 }
 
-bool CanPass(TMap const & map, Cell const & start, Cell const & finish)
+bool CanPass(TMap const & map, Cell const & start, Direction const dir)
 {
+    Cell finish = start.GetNeibor(dir);
     if (!IsValidCell(map, finish))
         return false;
-    for (auto dir: AllDirections())
-        if (IsDirectionOpen(GetCellType(map, start), dir) && IsDirectionOpen(GetCellType(map, finish), GetOppositeDirection(dir)))
-            return true;
+    if (IsDirectionOpen(GetCellType(map, start), dir) && IsDirectionOpen(GetCellType(map, finish), GetOppositeDirection(dir)))
+        return true;
     return false;
 }
 
@@ -138,7 +138,7 @@ void DSF(TMap const & maze,
         return;
     if (need_update)
         for (auto const & dir: AllDirections())
-            if (CanPass(maze, cur, cur.GetNeibor(dir)))
+            if (CanPass(maze, cur, dir))
                 DSF(maze, cur.GetNeibor(dir), cur, target, data);
 }
 
