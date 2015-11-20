@@ -153,7 +153,7 @@ void PrintMap(TMap const & mp, std::map<Cell, pair<int, Cell>> const & data)
             else
             {
 //                cout << ".";
-                if (data.count({x,y}) == 1)
+                if (data.count(Cell(x,y)) == 1)
                     cout << "+";
                 else
                     cout << ".";

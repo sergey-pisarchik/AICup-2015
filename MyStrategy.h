@@ -5,6 +5,8 @@
 
 #include "Strategy.h"
 #include "Strategy.h"
+#include "CommonDefines.h"
+#include "Cell.h"
 
 class MyStrategy : public Strategy {
 public:
@@ -20,6 +22,7 @@ private:
     int m_ForvardTick = -1;
     double m_BackwardWheelAngle = -1;
     bool m_bBackwardMove = false;
+    std::vector<Cell> m_visitedCells;
 };
 
 

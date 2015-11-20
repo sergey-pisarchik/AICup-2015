@@ -35,3 +35,8 @@ Cell GetCell(double const dX, double const dY, Game const & game)
 {
     return Cell(dX/game.getTrackTileSize(), dY/game.getTrackTileSize());
 }
+
+Cell GetCell(Unit const & unit, Game const & game)
+{
+    return GetCell(unit.getX(), unit.getY(), game);
+}

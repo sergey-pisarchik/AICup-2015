@@ -3,23 +3,48 @@
 #include "Cell.h"
 #include "PathUtils.h"
 #include "DebugFunctions.h"
+#include "UsefullFunctions.h"
 
 using namespace std;
 
-int const BACWARD_DUR = 125;
+int const BACWARD_DUR = 130;
 
 void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move)
 {
 
+    if (world.getTick() < 300)
+        return;
+    auto curCell = GetCell(self.getX(), self.getY(), game);
+    
+    if (m_visitedCells.empty() || m_visitedCells.back() != curCell)
+        m_visitedCells.push_back(curCell);
+    
+    
 #ifdef LOG
     if(world.getTick() == 1)
         PrintMap(world.getTilesXY());
 #endif
 //        move.setEnginePower(1.0);
-        move.setThrowProjectile(true);
-        move.setSpillOil(true);
-//        move.setUseNitro(true);
-
+    
+    for (Car const & car: world.getCars())
+    {
+        if (car.isTeammate())
+            continue;
+        double dAngleDeg = FDeg(self.getAngleTo(car));
+        double dist = self.getDistanceTo(car);
+        if (dAngleDeg < 15
+            && dist < 1.5 * game.getTrackTileSize())
+                move.setThrowProjectile(true);
+        
+        
+        for (int i = 3; i < 8 && i < m_visitedCells.size(); ++i)
+        {
+            auto carCell = GetCell(car, game);
+            if (carCell == m_visitedCells[m_visitedCells.size() - i])
+                move.setSpillOil(true);
+        }
+    }
+    
         if (m_bBackwardMove)
             return BackwardMove(self, world, game, move);
         m_ForvardTick++;
@@ -36,14 +61,11 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             }
         m_dPrevSpeed = speedModule;
     
-    //    if (world.getTick() > game.getInitialFreezeDurationTicks()) {
-    //        move.setUseNitro(true);
-    //    }
     
 
     
     Cell finish = {self.getNextWaypointX(), self.getNextWaypointY()};
-    Cell start = GetCell(self.getX(), self.getY(), game);
+    Cell start = curCell;
     
     vector<Cell> path = GetClosestPath(world, start, finish);
     
@@ -61,6 +83,14 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         path.push_back({0,0});
     while (path.size() < 3)
         path.push_back(path.back());
+            
+    if (path.size() >= 6)
+    {
+        double target4X = (path[4].m_x + 0.5) * game.getTrackTileSize();
+        double target4Y = (path[4].m_y + 0.5) * game.getTrackTileSize();
+        if (self.getAngleTo(target4X, target4Y) < 20*PI/180)
+            move.setUseNitro(true);
+    }
     
     
     Cell nextTarget = path[1];

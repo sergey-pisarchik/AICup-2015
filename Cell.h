@@ -18,6 +18,7 @@ public:
 };
 
 Cell GetCell(double const dX, double const dY, Game const & game);
+Cell GetCell(Unit const & unit, Game const & game);
 
 template <class TAr>
 TAr & operator<< (TAr & ar, Cell const & cell)
