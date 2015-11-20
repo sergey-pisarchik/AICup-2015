@@ -24,7 +24,7 @@
 
 using namespace model;
 using namespace std;
-//#define LOG
+#define LOG
 
 
 std::vector<Direction> const &  AllDirections();

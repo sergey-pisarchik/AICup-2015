@@ -13,17 +13,13 @@
 
 void PrintMap(TMap const & mp)
 {
-    for (auto & vr: mp)
+    for (size_t y = 0; y < mp[0].size(); ++y)
     {
-        for (auto & val: vr)
-        {
-            if (val == EMPTY)
-                cout << "#";
-            else
-                cout << ".";
-        }
+        for (size_t x = 0; x < mp.size(); ++x)
+            cout << (mp[x][y] == 0 ? "." : "0");
         cout << endl;
     }
+
 }
 
 

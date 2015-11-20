@@ -47,28 +47,31 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     vector<Cell> path = GetClosestPath(world, start, finish);
     
-    start = finish;
+    Cell start2 = finish;
     auto nextWaypointIndex = self.getNextWaypointIndex() + 1;
     if (nextWaypointIndex >= world.getWaypoints().size())
         nextWaypointIndex = 0;
-    finish = {world.getWaypoints()[nextWaypointIndex][0], world.getWaypoints()[nextWaypointIndex][1]};
-    vector<Cell> nextPath = GetClosestPath(world, start, finish);
+    Cell finish2 = {world.getWaypoints()[nextWaypointIndex][0], world.getWaypoints()[nextWaypointIndex][1]};
+    vector<Cell> nextPath = GetClosestPath(world, start2, finish2);
     for (size_t i = 1; i < nextPath.size(); ++i)
         path.push_back(nextPath[i]);
-    
-#ifdef LOG
-    cout << "s " << start << " f " << finish << " path ";
-    for (auto cell: path)
-        cout << cell << " : ";
-    cout << " target " << path[1] << endl;
-#endif
+   
     
     if (path.empty())
         path.push_back({0,0});
     while (path.size() < 3)
         path.push_back(path.back());
     
+    
     Cell nextTarget = path[2];
+    
+#ifdef LOG
+    cout << "s " << start << " wp " << finish <<  " wp2 " << finish << endl << "path ";
+    for (auto cell: path)
+        cout << cell << " : ";
+    cout << " target " << nextTarget << endl;
+#endif
+
     
     double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
     double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
@@ -100,7 +103,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     move.setWheelTurn(angleToWaypoint * 32.0 / PI);
 //    move.setWheelTurn(1);
-    move.setEnginePower(0.75);
+    move.setEnginePower(1);
     
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
     //            {
