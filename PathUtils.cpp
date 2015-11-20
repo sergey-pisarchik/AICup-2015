@@ -50,7 +50,7 @@ bool IsValidCell(TMap const & map, Cell const & cell)
         return false;
     if (cell.m_x >= map.size())
         return false;
-    if (cell.m_y >= map.size())
+    if (cell.m_y >= map[0].size())
         return false;
     return true;
 }
@@ -142,11 +142,36 @@ void DSF(TMap const & maze,
                 DSF(maze, cur.GetNeibor(dir), cur, target, data);
 }
 
+void PrintMap(TMap const & mp, std::map<Cell, pair<int, Cell>> const & data)
+{
+    for (size_t y = 0; y < mp[0].size(); ++y)
+    {
+        for (size_t x = 0; x < mp.size(); ++x)
+        {
+            if (mp[x][y] == 0)
+                cout << "0";
+            else
+            {
+//                cout << ".";
+                if (data.count({x,y}) == 1)
+                    cout << "+";
+                else
+                    cout << ".";
+
+            }
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+}
+
 vector<Cell> GetClosestPath(const model::World& world,
                               Cell const & start, Cell const & finish)
 {
     std::map<Cell, pair<int, Cell>> data;
     DSF(world.getTilesXY(), start, start, finish, data);
+//    PrintMap(world.getTilesXY(), data);
 
     vector<Cell> res;
     if (data.count(finish) == 0)
