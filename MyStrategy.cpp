@@ -146,6 +146,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
 //            break;
 //    }
 
+//    cout << Speed(self) << " " << GetCell(self, game) << " " << world.getTick() <<endl ;
     double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
 
     

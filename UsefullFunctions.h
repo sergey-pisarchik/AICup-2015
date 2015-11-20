@@ -13,6 +13,7 @@
 
 double Deg(double const rad);
 double FDeg(double const rad);
+double Speed(Unit const & unit);
 
 #endif /* UsefullFunctions_h */
 
