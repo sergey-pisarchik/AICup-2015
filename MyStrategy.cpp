@@ -11,9 +11,6 @@ int const BACWARD_DUR = 130;
 
 void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move)
 {
-
-    if (world.getTick() < 300)
-        return;
     auto curCell = GetCell(self.getX(), self.getY(), game);
     
     if (m_visitedCells.empty() || m_visitedCells.back() != curCell)
