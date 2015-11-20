@@ -23,6 +23,7 @@ private:
     double m_BackwardWheelAngle = -1;
     bool m_bBackwardMove = false;
     std::vector<Cell> m_visitedCells;
+    int m_brakeAfteNitroTicks = -1;
 };
 
 
