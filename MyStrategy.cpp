@@ -80,20 +80,10 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         path.push_back({0,0});
     while (path.size() < 3)
         path.push_back(path.back());
-    int STRAIT_PATH_NITRO = 6;
-    if (path.size() >= STRAIT_PATH_NITRO + 1)
-    {
-        double target4X = (path[STRAIT_PATH_NITRO].m_x + 0.5) * game.getTrackTileSize();
-        double target4Y = (path[STRAIT_PATH_NITRO].m_y + 0.5) * game.getTrackTileSize();
-        if (self.getAngleTo(target4X, target4Y) < 20*PI/180)
-        {
-            bool bStrait = true;
-            TileType curType = GetCellType(world.getTilesXY(), curCell);
-            for (size_t i =1; i < STRAIT_PATH_NITRO; ++i)
-                if (curType == GetCellType(world.getTilesXY(), path[i]))
-                    move.setUseNitro(true);
-        }
-    }
+    
+    if (IsStraight(self, path, 6, game, world))
+        move.setUseNitro(true);
+    
     if (self.getRemainingNitroTicks() == 1)
         m_brakeAfteNitroTicks = 45;
     m_brakeAfteNitroTicks--;

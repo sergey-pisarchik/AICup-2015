@@ -1,5 +1,6 @@
 
 #include "PathUtils.h"
+#include "Cell.h"
 
 Direction GetOppositeDirection(Direction dir)
 {
@@ -189,7 +190,24 @@ vector<Cell> GetClosestPath(const model::World& world,
 }
 
 
-
+bool IsStraight(Car const & car, std::vector<Cell> const & path, int N, Game const & game, World const & world)
+{
+    bool bStrait = false;
+    if (path.size() >= N + 1)
+    {
+        double target4X = (path[N].m_x + 0.5) * game.getTrackTileSize();
+        double target4Y = (path[N].m_y + 0.5) * game.getTrackTileSize();
+        if (car.getAngleTo(target4X, target4Y) < 20*PI/180)
+        {
+            bStrait = true;
+            TileType curType = GetCellType(world.getTilesXY(), GetCell(car, game));
+            for (size_t i =1; i < N; ++i)
+                if (curType != GetCellType(world.getTilesXY(), path[i]))
+                    bStrait = false;
+        }
+    }
+    return bStrait;
+}
 
 
 
