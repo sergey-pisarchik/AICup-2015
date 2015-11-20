@@ -210,7 +210,48 @@ bool IsStraight(Car const & car, std::vector<Cell> const & path, int N, Game con
 }
 
 
+int GetStraightLength(std::vector<Cell> const & path)
+{
+    if (path.empty())
+        return 0;
+    int res = 0;
+    for (auto dir: AllDirections())
+    {
+        auto cur = path[0];
+        int i = 0;
+        while (cur == path[i])
+        {
+            i++;
+            switch (dir) {
+                case LEFT:
+                    cur.m_x--;
+                    break;
+                case RIGHT:
+                    cur.m_x++;
+                    break;
+                case UP:
+                    cur.m_y--;
+                    break;
+                case DOWN:
+                    cur.m_y++;
+                    break;
+            }
+        }
+        res = max(res, i);
+    }
+    return res;
+}
 
+bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & game)
+{
+    auto targetCell = GetCell(unit, game);
+    for (auto const & cell: path)
+    {
+        if (targetCell == cell)
+            return true;
+    }
+    return false;
+}
 
 
 

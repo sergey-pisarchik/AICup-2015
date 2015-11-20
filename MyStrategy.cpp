@@ -29,7 +29,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             continue;
         double dAngleDeg = FDeg(self.getAngleTo(car));
         double dist = self.getDistanceTo(car);
-        if (dAngleDeg < 15
+        if (dAngleDeg < 5
             && dist < 1.5 * game.getTrackTileSize())
                 move.setThrowProjectile(true);
         
@@ -137,9 +137,28 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
 //    }
 
 //    cout << Speed(self) << " " << GetCell(self, game) << " " << world.getTick() <<endl ;
-    double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
-
     
+
+    int strightLength = GetStraightLength(path);
+    double min_bonus_dist = (strightLength - 1.5) * game.getTrackTileSize();
+    if (strightLength > 2)
+    {
+        for (auto const & bonus: world.getBonuses())
+        {
+            if (FDeg(self.getAngleTo(bonus)) < 25)
+            {
+               if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game))
+               {
+                   min_bonus_dist = self.getDistanceTo(bonus);
+                   nextWaypointX = bonus.getX();
+                   nextWaypointY = bonus.getY();
+               }
+            }
+            
+        }
+    }
+    
+    double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
     move.setWheelTurn(angleToWaypoint * 32.0 / PI);
 //    move.setWheelTurn(1);
     move.setEnginePower(1);
