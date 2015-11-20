@@ -63,7 +63,8 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         path.push_back(path.back());
     
     
-    Cell nextTarget = path[2];
+    Cell nextTarget = path[1];
+    Cell nextTarget2 = path[2];
     
 #ifdef LOG
     cout << "s " << start << " wp " << finish <<  " wp2 " << finish << endl << "path ";
@@ -75,6 +76,13 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
     double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
+
+    double nextWaypointX2 = (nextTarget2.m_x + 0.5) * game.getTrackTileSize();
+    double nextWaypointY2 = (nextTarget2.m_y + 0.5) * game.getTrackTileSize();
+
+    double k= 0.4;
+    nextWaypointX = (k*nextWaypointX + (1-k)*nextWaypointX2);
+    nextWaypointY = (k*nextWaypointY + (1-k)*nextWaypointY2);
     
     double cornerTileOffset = 0.15 * game.getTrackTileSize();
     
