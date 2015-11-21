@@ -27,10 +27,12 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     {
         if (car.isTeammate())
             continue;
+        if (car.getDurability() == 0)
+            continue;
         double dAngleDeg = FDeg(self.getAngleTo(car));
         double dist = self.getDistanceTo(car);
         if (dAngleDeg < 5
-            && dist < 1.5 * game.getTrackTileSize())
+            && dist < 1.9 * game.getTrackTileSize())
                 move.setThrowProjectile(true);
         
         
@@ -81,15 +83,6 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     while (path.size() < 3)
         path.push_back(path.back());
     
-    int straight_length = GetStraightLength(path);
-    if (straight_length >= 6 && world.getTick() > 180)
-        move.setUseNitro(true);
-    
-    if (self.getRemainingNitroTicks() == 1)
-        m_brakeAfteNitroTicks = 45;
-    m_brakeAfteNitroTicks--;
-    if (m_brakeAfteNitroTicks > 0)
-        move.setBrake(true);
 
         
     
@@ -164,6 +157,20 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
 //    move.setWheelTurn(1);
     move.setEnginePower(1);
     
+    int straight_length = GetStraightLength(path);
+    if (straight_length >= 6 && world.getTick() > 180)
+    {
+        if (FDeg(angleToWaypoint) < 20)
+            move.setUseNitro(true);
+    }
+
+    if (self.getRemainingNitroTicks() == 1)
+        m_brakeAfteNitroTicks = 45;
+    m_brakeAfteNitroTicks--;
+    if (m_brakeAfteNitroTicks > 0)
+        move.setBrake(true);
+
+
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
     //            {
     //                move.setBrake(true);
