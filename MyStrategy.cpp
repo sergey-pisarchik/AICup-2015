@@ -21,7 +21,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     if(world.getTick() == 1)
         PrintMap(world.getTilesXY());
 #endif
-//        move.setEnginePower(1.0);
+    //        move.setEnginePower(1.0);
     
     for (Car const & car: world.getCars())
     {
@@ -44,24 +44,24 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         }
     }
     
-        if (m_bBackwardMove)
+    if (m_bBackwardMove)
+        return BackwardMove(self, world, game, move);
+    m_ForvardTick++;
+    double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
+    
+    
+    if (m_ForvardTick > 30 && world.getTick() > 230)
+        if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
+        {
+            m_bBackwardMove = true;
+            m_BacwardTick = BACWARD_DUR;
+            m_BackwardWheelAngle = -self.getWheelTurn();
             return BackwardMove(self, world, game, move);
-        m_ForvardTick++;
-        double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
-
-
-        if (m_ForvardTick > 30 && world.getTick() > 230)
-            if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
-            {
-                m_bBackwardMove = true;
-                m_BacwardTick = BACWARD_DUR;
-                m_BackwardWheelAngle = -self.getWheelTurn();
-                return BackwardMove(self, world, game, move);
-            }
-        m_dPrevSpeed = speedModule;
+        }
+    m_dPrevSpeed = speedModule;
     
     
-
+    
     
     Cell finish = {self.getNextWaypointX(), self.getNextWaypointY()};
     Cell start = curCell;
@@ -76,7 +76,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     vector<Cell> nextPath = GetClosestPath(world, start2, finish2);
     for (size_t i = 1; i < nextPath.size(); ++i)
         path.push_back(nextPath[i]);
-   
+    
     
     if (path.empty())
         path.push_back({0,0});
@@ -96,43 +96,43 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         cout << cell << " : ";
     cout << " target " << nextTarget << endl;
 #endif
-
+    
     
     double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
     double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
-
+    
     double nextWaypointX2 = (nextTarget2.m_x + 0.5) * game.getTrackTileSize();
     double nextWaypointY2 = (nextTarget2.m_y + 0.5) * game.getTrackTileSize();
-
+    
     double k= 0.4;
     nextWaypointX = (k*nextWaypointX + (1-k)*nextWaypointX2);
     nextWaypointY = (k*nextWaypointY + (1-k)*nextWaypointY2);
     
     double cornerTileOffset = 0.15 * game.getTrackTileSize();
     
-//    switch (GetCellType(world.getTilesXY(), nextTarget))
-//    {
-//        case LEFT_TOP_CORNER:
-//            nextWaypointX += cornerTileOffset;
-//            nextWaypointY += cornerTileOffset;
-//            break;
-//        case RIGHT_TOP_CORNER:
-//            nextWaypointX -= cornerTileOffset;
-//            nextWaypointY += cornerTileOffset;
-//            break;
-//        case LEFT_BOTTOM_CORNER:
-//            nextWaypointX += cornerTileOffset;
-//            nextWaypointY -= cornerTileOffset;
-//            break;
-//        case RIGHT_BOTTOM_CORNER:
-//            nextWaypointX -= cornerTileOffset;
-//            nextWaypointY -= cornerTileOffset;
-//            break;
-//    }
-
-//    cout << Speed(self) << " " << GetCell(self, game) << " " << world.getTick() <<endl ;
+    //    switch (GetCellType(world.getTilesXY(), nextTarget))
+    //    {
+    //        case LEFT_TOP_CORNER:
+    //            nextWaypointX += cornerTileOffset;
+    //            nextWaypointY += cornerTileOffset;
+    //            break;
+    //        case RIGHT_TOP_CORNER:
+    //            nextWaypointX -= cornerTileOffset;
+    //            nextWaypointY += cornerTileOffset;
+    //            break;
+    //        case LEFT_BOTTOM_CORNER:
+    //            nextWaypointX += cornerTileOffset;
+    //            nextWaypointY -= cornerTileOffset;
+    //            break;
+    //        case RIGHT_BOTTOM_CORNER:
+    //            nextWaypointX -= cornerTileOffset;
+    //            nextWaypointY -= cornerTileOffset;
+    //            break;
+    //    }
     
-
+    //    cout << Speed(self) << " " << GetCell(self, game) << " " << world.getTick() <<endl ;
+    
+    
     int strightLength = GetStraightLength(path);
     double min_bonus_dist = (strightLength - 1.5) * game.getTrackTileSize();
     if (strightLength > 2)
@@ -141,12 +141,12 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         {
             if (FDeg(self.getAngleTo(bonus)) < 10)
             {
-               if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game))
-               {
-                   min_bonus_dist = self.getDistanceTo(bonus);
-                   nextWaypointX = bonus.getX();
-                   nextWaypointY = bonus.getY();
-               }
+                if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game))
+                {
+                    min_bonus_dist = self.getDistanceTo(bonus);
+                    nextWaypointX = bonus.getX();
+                    nextWaypointY = bonus.getY();
+                }
             }
             
         }
@@ -154,7 +154,6 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
     move.setWheelTurn(angleToWaypoint * 32.0 / PI);
-//    move.setWheelTurn(1);
     move.setEnginePower(1);
     
     int straight_length = GetStraightLength(path);
@@ -175,12 +174,12 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     //            {
     //                move.setBrake(true);
     //            }
-
+    
 }
 
 
 void MyStrategy::BackwardMove(const model::Car& self, const model::World& world,
-                  const model::Game& game, model::Move& move)
+                              const model::Game& game, model::Move& move)
 {
     m_BacwardTick--;
     if (m_BacwardTick < 0)
@@ -192,18 +191,18 @@ void MyStrategy::BackwardMove(const model::Car& self, const model::World& world,
     }
     else
     {
-         move.setEnginePower(-1);
-         if (m_BacwardTick < BACWARD_DUR / 3)
-         {
-             move.setEnginePower(1);
-             move.setWheelTurn(0);
-             
-         }
-         else
+        move.setEnginePower(-1);
+        if (m_BacwardTick < BACWARD_DUR / 3)
+        {
+            move.setEnginePower(1);
+            move.setWheelTurn(0);
+            
+        }
+        else
             move.setWheelTurn(0);
         if (m_BacwardTick < BACWARD_DUR / 6)
             move.setBrake(true);
-            
+        
     }
 }
 

@@ -1,9 +1,9 @@
 #include "Cell.h"
- Cell::Cell(int x, int y)
-     :m_x(x), m_y(y)
- {
-
- }
+Cell::Cell(int x, int y)
+:m_x(x), m_y(y)
+{
+    
+}
 
 bool Cell::operator==(Cell const & other) const
 {

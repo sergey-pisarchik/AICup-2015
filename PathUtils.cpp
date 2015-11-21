@@ -5,14 +5,14 @@
 Direction GetOppositeDirection(Direction dir)
 {
     switch (dir) {
-    case LEFT:
-        return RIGHT;
-    case RIGHT:
-        return LEFT;
-    case UP:
-        return DOWN;
-    case DOWN:
-        return UP;
+        case LEFT:
+            return RIGHT;
+        case RIGHT:
+            return LEFT;
+        case UP:
+            return DOWN;
+        case DOWN:
+            return UP;
     }
     return UP;
 }
@@ -22,18 +22,18 @@ bool IsDirectionOpen(TileType const ttype, Direction dir)
     if (ttype == CROSSROADS)
         return true;
     switch (dir) {
-    case LEFT:
-        return (ttype == HORIZONTAL || ttype == RIGHT_TOP_CORNER || ttype == RIGHT_BOTTOM_CORNER
-                || ttype == LEFT_HEADED_T || ttype == BOTTOM_HEADED_T || ttype == TOP_HEADED_T);
-    case RIGHT:
-        return (ttype == HORIZONTAL || ttype == LEFT_TOP_CORNER || ttype == LEFT_BOTTOM_CORNER
-                || ttype == RIGHT_HEADED_T || ttype == BOTTOM_HEADED_T || ttype == TOP_HEADED_T);
-    case UP:
-        return (ttype == VERTICAL || ttype == LEFT_BOTTOM_CORNER || ttype == RIGHT_BOTTOM_CORNER
-                || ttype == LEFT_HEADED_T || ttype == TOP_HEADED_T || ttype == RIGHT_HEADED_T);
-    case DOWN:
-        return (ttype == VERTICAL || ttype == RIGHT_TOP_CORNER || ttype == LEFT_TOP_CORNER
-                || ttype == LEFT_HEADED_T || ttype == RIGHT_HEADED_T || ttype == BOTTOM_HEADED_T);
+        case LEFT:
+            return (ttype == HORIZONTAL || ttype == RIGHT_TOP_CORNER || ttype == RIGHT_BOTTOM_CORNER
+                    || ttype == LEFT_HEADED_T || ttype == BOTTOM_HEADED_T || ttype == TOP_HEADED_T);
+        case RIGHT:
+            return (ttype == HORIZONTAL || ttype == LEFT_TOP_CORNER || ttype == LEFT_BOTTOM_CORNER
+                    || ttype == RIGHT_HEADED_T || ttype == BOTTOM_HEADED_T || ttype == TOP_HEADED_T);
+        case UP:
+            return (ttype == VERTICAL || ttype == LEFT_BOTTOM_CORNER || ttype == RIGHT_BOTTOM_CORNER
+                    || ttype == LEFT_HEADED_T || ttype == TOP_HEADED_T || ttype == RIGHT_HEADED_T);
+        case DOWN:
+            return (ttype == VERTICAL || ttype == RIGHT_TOP_CORNER || ttype == LEFT_TOP_CORNER
+                    || ttype == LEFT_HEADED_T || ttype == RIGHT_HEADED_T || ttype == BOTTOM_HEADED_T);
     }
     return false;
 }
@@ -125,8 +125,8 @@ bool CanPass(TMap const & map, Cell const & start, Direction const dir)
 //}
 
 void DSF(TMap const & maze,
-           Cell const & cur, Cell const & prev, Cell const & target,
-           std::map<Cell, pair<int, Cell>> & data)
+         Cell const & cur, Cell const & prev, Cell const & target,
+         std::map<Cell, pair<int, Cell>> & data)
 {
     bool need_update = data.count(cur) == 0;
     need_update |= data[cur].first > data[prev].first + 1;
@@ -153,32 +153,32 @@ void PrintMap(TMap const & mp, std::map<Cell, pair<int, Cell>> const & data)
                 cout << "0";
             else
             {
-//                cout << ".";
+                //                cout << ".";
                 if (data.count(Cell(x,y)) == 1)
                     cout << "+";
                 else
                     cout << ".";
-
+                
             }
         }
         cout << endl;
     }
     cout << endl;
-
+    
 }
 
 vector<Cell> GetClosestPath(const model::World& world,
-                              Cell const & start, Cell const & finish)
+                            Cell const & start, Cell const & finish)
 {
     std::map<Cell, pair<int, Cell>> data;
     DSF(world.getTilesXY(), start, start, finish, data);
-//    PrintMap(world.getTilesXY(), data);
-
+    //    PrintMap(world.getTilesXY(), data);
+    
     vector<Cell> res;
     if (data.count(finish) == 0)
         return res;
     Cell cur = finish;
-
+    
     while (cur != start)
     {
         res.push_back(cur);
