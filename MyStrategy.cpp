@@ -81,7 +81,8 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     while (path.size() < 3)
         path.push_back(path.back());
     
-    if (IsStraight(self, path, 6, game, world))
+    int straight_length = GetStraightLength(path);
+    if (straight_length >= 6 && world.getTick() > 180)
         move.setUseNitro(true);
     
     if (self.getRemainingNitroTicks() == 1)
@@ -145,7 +146,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     {
         for (auto const & bonus: world.getBonuses())
         {
-            if (FDeg(self.getAngleTo(bonus)) < 25)
+            if (FDeg(self.getAngleTo(bonus)) < 10)
             {
                if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game))
                {
