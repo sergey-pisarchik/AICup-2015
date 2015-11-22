@@ -97,18 +97,21 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     cout << " target " << nextTarget << endl;
 #endif
     
-    double closeX = -1. * GetXSign(curCell, nextTarget) * 0.5;
-    double closeY = -1. * GetYSign(curCell, nextTarget) * 0.5;
     
-    double nextWaypointX = (nextTarget.m_x + 0.5 + closeX) * game.getTrackTileSize();
-    double nextWaypointY = (nextTarget.m_y + 0.5 + closeY) * game.getTrackTileSize();
+    double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
+    double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
     
-    double nextWaypointX2 = (nextTarget2.m_x + 0.5 + closeX) * game.getTrackTileSize();
-    double nextWaypointY2 = (nextTarget2.m_y + 0.5 + closeY) * game.getTrackTileSize();
+    double nextWaypointX2 = (nextTarget2.m_x + 0.5) * game.getTrackTileSize();
+    double nextWaypointY2 = (nextTarget2.m_y + 0.5) * game.getTrackTileSize();
     
-    double k= 0.4;
+
+        
+    
+    double k = 0.4;
     nextWaypointX = (k*nextWaypointX + (1-k)*nextWaypointX2);
     nextWaypointY = (k*nextWaypointY + (1-k)*nextWaypointY2);
+    
+    
     
     double cornerTileOffset = 0.15 * game.getTrackTileSize();
     
@@ -165,11 +168,16 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             move.setUseNitro(true);
     }
 
-    if (self.getRemainingNitroTicks() == 1)
+    if (self.getRemainingNitroTicks() == 1 && strightLength < 2)
         m_brakeAfteNitroTicks = 45;
     m_brakeAfteNitroTicks--;
     if (m_brakeAfteNitroTicks > 0)
         move.setBrake(true);
+    
+    if (strightLength < 3  && (FDeg(angleToWaypoint) > 15 && Speed(self) > 15))
+    {
+        move.setBrake(true);
+    }
 
 
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
