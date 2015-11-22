@@ -97,12 +97,14 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     cout << " target " << nextTarget << endl;
 #endif
     
+    double closeX = -1. * GetXSign(curCell, nextTarget) * 0.5;
+    double closeY = -1. * GetYSign(curCell, nextTarget) * 0.5;
     
-    double nextWaypointX = (nextTarget.m_x + 0.5) * game.getTrackTileSize();
-    double nextWaypointY = (nextTarget.m_y + 0.5) * game.getTrackTileSize();
+    double nextWaypointX = (nextTarget.m_x + 0.5 + closeX) * game.getTrackTileSize();
+    double nextWaypointY = (nextTarget.m_y + 0.5 + closeY) * game.getTrackTileSize();
     
-    double nextWaypointX2 = (nextTarget2.m_x + 0.5) * game.getTrackTileSize();
-    double nextWaypointY2 = (nextTarget2.m_y + 0.5) * game.getTrackTileSize();
+    double nextWaypointX2 = (nextTarget2.m_x + 0.5 + closeX) * game.getTrackTileSize();
+    double nextWaypointY2 = (nextTarget2.m_y + 0.5 + closeY) * game.getTrackTileSize();
     
     double k= 0.4;
     nextWaypointX = (k*nextWaypointX + (1-k)*nextWaypointX2);

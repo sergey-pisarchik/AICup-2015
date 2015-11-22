@@ -14,3 +14,20 @@ double Speed(Unit const & unit)
 {
     return hypot(unit.getSpeedX(), unit.getSpeedY());
 }
+
+int GetXSign(Cell const & from, Cell const & to)
+{
+    if (from.m_x == to.m_x)
+        return 0;
+    if (from.m_x < to.m_x)
+        return 1;
+    return -1;
+}
+int GetYSign(Cell const & from, Cell const & to)
+{
+    if (from.m_y == to.m_y)
+        return 0;
+    if (from.m_y < to.m_y)
+        return 1;
+    return -1;
+}
