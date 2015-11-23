@@ -24,6 +24,9 @@ private:
     bool m_bBackwardMove = false;
     std::vector<Cell> m_visitedCells;
     int m_brakeAfteNitroTicks = -1;
+    
+    Cell m_180BreakCell;
+    bool m_breakCellVisited;
 };
 
 

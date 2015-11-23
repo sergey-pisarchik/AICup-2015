@@ -14,6 +14,7 @@
 
 double Deg(double const rad);
 double FDeg(double const rad);
+double Rad(double const deg);
 double Speed(Unit const & unit);
 
 // return sign that if add to from will became to

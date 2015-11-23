@@ -5,6 +5,11 @@ double Deg(double const rad)
 {
     return rad / PI * 180;
 }
+
+double Rad(double const deg)
+{
+    return deg / 180. * PI;
+}
 double FDeg(double const rad)
 {
     return fabs(rad / PI * 180);

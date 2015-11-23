@@ -36,7 +36,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
                 move.setThrowProjectile(true);
         
         
-        for (int i = 3; i < 8 && i < m_visitedCells.size(); ++i)
+        for (int i = 3; i < 7 && i < m_visitedCells.size(); ++i)
         {
             auto carCell = GetCell(car, game);
             if (carCell == m_visitedCells[m_visitedCells.size() - i])
@@ -113,29 +113,12 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     
     
-    double cornerTileOffset = 0.15 * game.getTrackTileSize();
     
-    //    switch (GetCellType(world.getTilesXY(), nextTarget))
-    //    {
-    //        case LEFT_TOP_CORNER:
-    //            nextWaypointX += cornerTileOffset;
-    //            nextWaypointY += cornerTileOffset;
-    //            break;
-    //        case RIGHT_TOP_CORNER:
-    //            nextWaypointX -= cornerTileOffset;
-    //            nextWaypointY += cornerTileOffset;
-    //            break;
-    //        case LEFT_BOTTOM_CORNER:
-    //            nextWaypointX += cornerTileOffset;
-    //            nextWaypointY -= cornerTileOffset;
-    //            break;
-    //        case RIGHT_BOTTOM_CORNER:
-    //            nextWaypointX -= cornerTileOffset;
-    //            nextWaypointY -= cornerTileOffset;
-    //            break;
-    //    }
+//    double cornerTileOffset = 0.15 * game.getTrackTileSize();
     
-    //    cout << Speed(self) << " " << GetCell(self, game) << " " << world.getTick() <<endl ;
+    ///////////
+    //// BONUS
+    ///////////
     
     
     int strightLength = GetStraightLength(path);
@@ -157,9 +140,27 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         }
     }
     
+    
+    ///////////
+    // WHEEL
+    //////////
     double angleToWaypoint = self.getAngleTo(nextWaypointX, nextWaypointY);
-    move.setWheelTurn(angleToWaypoint * 32.0 / PI);
-    move.setEnginePower(1);
+//    move.setWheelTurn(angleToWaypoint * 32.0 / PI);
+    
+    double MAX_ANGLE = 32.;
+    if (FDeg(angleToWaypoint) > MAX_ANGLE)
+        move.setWheelTurn(angleToWaypoint > 0 ? 1 : -1);
+    else
+        move.setWheelTurn((1./MAX_ANGLE)*(1.15 * Deg(angleToWaypoint)));
+    
+    if (world.getTick() < 205)
+        move.setEnginePower(0.25);
+    else
+        move.setEnginePower(1);
+    
+    //////////
+    /// NITRO
+    //////////
     
     int straight_length = GetStraightLength(path);
     if (straight_length >= 6 && world.getTick() > 180)
@@ -178,7 +179,28 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     {
         move.setBrake(true);
     }
-
+    
+    //////////
+    // 180 turn
+    //////////
+    
+    if (Is180Turn(path))
+    {
+        m_180BreakCell = path[2];
+        m_breakCellVisited = false;
+    }
+    
+    if (curCell == m_180BreakCell)
+    {
+        m_breakCellVisited = true;
+        if (Speed(self) > 7)
+            move.setBrake(true);
+    }
+    if (m_breakCellVisited && curCell != m_180BreakCell)
+    {
+        m_breakCellVisited = false;
+        m_180BreakCell = {-1,-1};
+    }
 
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
     //            {

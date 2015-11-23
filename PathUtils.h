@@ -14,5 +14,7 @@ int GetStraightLength(std::vector<Cell> const & path);
 
 bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & game);
 
+bool Is180Turn(std::vector<Cell> const & path);
+
 #endif // PATHUTILS
 

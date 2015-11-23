@@ -253,6 +253,16 @@ bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & ga
     return false;
 }
 
+bool Is180Turn(std::vector<Cell> const & path)
+{
+    if (path.size()< 4)
+        return false;
+    for (auto dir: AllDirections())
+        if (path[0].GetNeibor(dir) == path[3])
+            return true;
+    return false;
+}
+
 
 
 
