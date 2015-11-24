@@ -163,7 +163,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     //////////
     
     int straight_length = GetStraightLength(path);
-    if (straight_length >= 6 && world.getTick() > 180)
+    if (straight_length >= 6 && world.getTick() > 220)
     {
         if (FDeg(angleToWaypoint) < 20)
             move.setUseNitro(true);
