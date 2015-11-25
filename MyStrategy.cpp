@@ -192,20 +192,24 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     if (Is180Turn(path))
     {
-        m_180TargetCell = path[3];
+        m_180TurnCurCell = path[0];
         m_180TurnMode = true;
+        m_180TurnLength = 3;
     }
     
-    if (m_180TurnMode && curCell != m_180TargetCell)
+    if (m_180TurnMode && curCell != m_180TurnCurCell)
     {
-        if (Speed(self) > 12)
+        m_180TurnLength--;
+        if (m_180TurnLength == 0)
+            m_180TurnMode = false;
+        m_180TurnCurCell = curCell;
+    }
+    
+    if (m_180TurnMode && Speed(self) > 12)
+    {
             move.setBrake(true);
     }
-    if (m_180TurnMode && curCell == m_180TargetCell)
-    {
-        m_180TurnMode = false;
-        m_180TargetCell = {-1,-1};
-    }
+    
 
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
     //            {
