@@ -25,8 +25,8 @@ private:
     std::vector<Cell> m_visitedCells;
     int m_brakeAfteNitroTicks = -1;
     
-    Cell m_180BreakCell;
-    bool m_breakCellVisited;
+    Cell m_180TargetCell = {-1,-1};
+    bool m_180TurnMode = false;
 };
 
 

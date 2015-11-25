@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int const BACWARD_DUR = 133;
+int const BACWARD_DUR = 150;
 
 void MyStrategy::move(const Car& self, const World& world, const Game& game, Move& move)
 {
@@ -186,20 +186,19 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     if (Is180Turn(path))
     {
-        m_180BreakCell = path[2];
-        m_breakCellVisited = false;
+        m_180TargetCell = path[3];
+        m_180TurnMode = true;
     }
     
-    if (curCell == m_180BreakCell)
+    if (m_180TurnMode && curCell != m_180TargetCell)
     {
-        m_breakCellVisited = true;
-        if (Speed(self) > 7)
+        if (Speed(self) > 12)
             move.setBrake(true);
     }
-    if (m_breakCellVisited && curCell != m_180BreakCell)
+    if (m_180TurnMode && curCell == m_180TargetCell)
     {
-        m_breakCellVisited = false;
-        m_180BreakCell = {-1,-1};
+        m_180TurnMode = false;
+        m_180TargetCell = {-1,-1};
     }
 
     //            if (speedModule * speedModule * abs(angleToWaypoint) > 2.5 * 2.5 * PI)
