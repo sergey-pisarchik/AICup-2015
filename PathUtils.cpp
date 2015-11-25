@@ -124,64 +124,86 @@ bool CanPass(TMap const & map, Cell const & start, Direction const dir)
 //    return res;
 //}
 
+typedef pair<Cell, Direction> MapKeyT;
+typedef std::map<MapKeyT, pair<int, MapKeyT>> MapT;
+
 void DSF(TMap const & maze,
-         Cell const & cur, Cell const & prev, Cell const & target,
-         std::map<Cell, pair<int, Cell>> & data)
+         MapKeyT const & cur, MapKeyT const & prev, Cell const & target,
+         MapT & data)
 {
+    bool IsOpposite = GetOppositeDirection(prev.second) == cur.second;
     bool need_update = data.count(cur) == 0;
-    need_update |= data[cur].first > data[prev].first + 1;
+    need_update |= data[cur].first > data[prev].first + (IsOpposite ? 3 : 1);
     if (need_update)
     {
         int prev_dist = data.count(prev) == 0 ? 0 : data[prev].first;
-        data[cur] = {prev_dist + 1, prev};
+        data[cur] = {prev_dist + (IsOpposite ? 3 : 1), prev};
     }
-    if (cur == target)
+    if (cur.first == target)
         return;
     if (need_update)
+    {
+        if (CanPass(maze, cur.first, cur.second))
+            DSF(maze, {cur.first.GetNeibor(cur.second), cur.second}, cur, target, data);
         for (auto const & dir: AllDirections())
-            if (CanPass(maze, cur, dir))
-                DSF(maze, cur.GetNeibor(dir), cur, target, data);
+            if (CanPass(maze, cur.first, dir))
+                DSF(maze, {cur.first.GetNeibor(dir), dir}, cur, target, data);
+    }
 }
 
-void PrintMap(TMap const & mp, std::map<Cell, pair<int, Cell>> const & data)
-{
-    for (size_t y = 0; y < mp[0].size(); ++y)
-    {
-        for (size_t x = 0; x < mp.size(); ++x)
-        {
-            if (mp[x][y] == 0)
-                cout << "0";
-            else
-            {
-                //                cout << ".";
-                if (data.count(Cell(x,y)) == 1)
-                    cout << "+";
-                else
-                    cout << ".";
-                
-            }
-        }
-        cout << endl;
-    }
-    cout << endl;
-    
-}
+//void PrintMap(TMap const & mp, std::map<Cell, pair<int, Cell>> const & data)
+//{
+//    for (size_t y = 0; y < mp[0].size(); ++y)
+//    {
+//        for (size_t x = 0; x < mp.size(); ++x)
+//        {
+//            if (mp[x][y] == 0)
+//                cout << "0";
+//            else
+//            {
+//                //                cout << ".";
+//                if (data.count(Cell(x,y)) == 1)
+//                    cout << "+";
+//                else
+//                    cout << ".";
+//                
+//            }
+//        }
+//        cout << endl;
+//    }
+//    cout << endl;
+//    
+//}
 
 vector<Cell> GetClosestPath(const model::World& world,
-                            Cell const & start, Cell const & finish)
+                            Cell const & start, Direction const start_dir, Cell const & finish)
 {
-    std::map<Cell, pair<int, Cell>> data;
-    DSF(world.getTilesXY(), start, start, finish, data);
+    MapT data;
+    DSF(world.getTilesXY(), {start, start_dir}, {start, start_dir}, finish, data);
     //    PrintMap(world.getTilesXY(), data);
     
     vector<Cell> res;
-    if (data.count(finish) == 0)
-        return res;
-    Cell cur = finish;
-    
-    while (cur != start)
+    int const INF = 1000000;
+    int best = INF;
+    MapKeyT cur = {finish, LEFT};
+    for (auto dir: AllDirections())
     {
-        res.push_back(cur);
+        if (data.count({finish,dir}) == 0)
+            continue;
+        if (data[{finish,dir}].first < best)
+        {
+            best = data[{finish,dir}].first;
+            cur = {finish,dir};
+        }
+        
+    }
+    if (best == INF)
+        return res;
+    
+    
+    while (cur.first != start)
+    {
+        res.push_back(cur.first);
         cur = data[cur].second;
     }
     res.push_back(start);

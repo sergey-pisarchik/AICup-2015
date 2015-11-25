@@ -40,3 +40,11 @@ Cell GetCell(Unit const & unit, Game const & game)
 {
     return GetCell(unit.getX(), unit.getY(), game);
 }
+
+Direction GetDirection(Cell const & from, Cell const & to)
+{
+    for (auto dir: AllDirections())
+        if (from.GetNeibor(dir) == to)
+            return dir;
+    return LEFT;
+}

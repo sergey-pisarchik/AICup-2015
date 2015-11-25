@@ -27,4 +27,6 @@ TAr & operator<< (TAr & ar, Cell const & cell)
     return ar;
 }
 
+Direction GetDirection(Cell const & from, Cell const & to);
+
 #endif // CELL_H

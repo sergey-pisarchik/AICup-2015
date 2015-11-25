@@ -21,5 +21,7 @@ double Speed(Unit const & unit);
 int GetXSign(Cell const & from, Cell const & to);
 int GetYSign(Cell const & from, Cell const & to);
 
+Direction GetDirection(Unit const & unit);
+
 #endif /* UsefullFunctions_h */
 

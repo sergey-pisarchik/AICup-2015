@@ -36,3 +36,19 @@ int GetYSign(Cell const & from, Cell const & to)
         return 1;
     return -1;
 }
+
+Direction GetDirection(Unit const & unit)
+{
+    double DegAngle = Deg(unit.getAngle());
+    if (DegAngle > -45 && DegAngle <= 45)
+        return RIGHT;
+    if (DegAngle > 45 && DegAngle <= 135)
+        return DOWN;
+    if (DegAngle > 135 || DegAngle <= -135)
+        return LEFT;
+    if (DegAngle > -135 && DegAngle <= -45)
+        return UP;
+    
+    return RIGHT;
+    
+}
