@@ -23,6 +23,10 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
 #endif
     //        move.setEnginePower(1.0);
     
+    ////////
+    // FIRE & OIL
+    ///////
+    
     for (Car const & car: world.getCars())
     {
         if (car.isTeammate())
@@ -35,6 +39,14 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             && dist < 1.9 * game.getTrackTileSize())
             move.setThrowProjectile(true);
         
+//        for (double tick = 0; tick < 5. * 800./60.; tick += 0.1)
+//        {
+//            auto car_pos = GetPosition(car, tick);
+//            auto bullet_pos_x = GetBulletPosition(self, tick);
+//            if (GetDist(car_pos.first, car_pos.second, bullet_pos_x.first, bullet_pos_x.second) < 20)
+//                move.setThrowProjectile(true);
+//        }
+        
         
         for (int i = 3; i < 7 && i < m_visitedCells.size(); ++i)
         {
@@ -44,9 +56,15 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         }
     }
     
+    ////////
+    //BACKBARD
+    ////////
+    
     if (m_bBackwardMove)
         return BackwardMove(self, world, game, move);
     m_ForvardTick++;
+    
+    
     double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
     
     
@@ -60,7 +78,9 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         }
     m_dPrevSpeed = speedModule;
     
-    
+    /////////
+    // PATH
+    /////////
     
     
     Cell finish = {self.getNextWaypointX(), self.getNextWaypointY()};
@@ -90,7 +110,9 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         path.push_back(path.back());
     
     
-    
+    ////////
+    // TARGET CELL
+    ////////
     
     
     Cell nextTarget = path[1];
@@ -191,7 +213,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             move.setUseNitro(true);
     }
     
-    if (self.getRemainingNitroTicks() == 1 && strightLength < 2)
+    if (self.getRemainingNitroTicks() == 1 && strightLength < 3)
         m_brakeAfteNitroTicks = 45;
     m_brakeAfteNitroTicks--;
     if (m_brakeAfteNitroTicks > 0)

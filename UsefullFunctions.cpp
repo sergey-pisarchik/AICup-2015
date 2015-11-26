@@ -83,3 +83,22 @@ std::pair<double, double> GetCornerCoords(Cell const & cell, int corner, Game co
     return res;
     
 }
+
+std::pair<double, double> GetPosition(Unit const & unit, double tick)
+{
+    return {unit.getX() + tick * unit.getSpeedX(), unit.getY() + tick * unit.getSpeedY()};
+}
+
+std::pair<double, double> GetBulletPosition(Unit const & unit, double tick)
+{
+    double angle = unit.getAngle();
+    double x = unit.getX() + cos(-angle) * 60;
+    double y = unit.getY() + sin(-angle) * 60;
+    return {x,y};
+    
+}
+
+double GetDist(double x1, double y1, double x2, double y2)
+{
+    return hypot(x1-x2, y1-y2);
+}

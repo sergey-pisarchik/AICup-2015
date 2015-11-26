@@ -26,5 +26,10 @@ std::pair<double, double> GetCornerCoords(Cell const & cell, int corner, Game co
 
 Direction GetDirection(Unit const & unit);
 
+std::pair<double, double> GetPosition(Unit const & unit, double tick);
+std::pair<double, double> GetBulletPosition(Unit const & unit, double tick);
+
+double GetDist(double x1, double y1, double x2, double y2);
+
 #endif /* UsefullFunctions_h */
 
