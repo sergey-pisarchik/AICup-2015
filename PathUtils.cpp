@@ -175,9 +175,40 @@ void DSF(TMap const & maze,
 //    
 //}
 
+struct cashe_key
+{
+    bool operator < (cashe_key const & other) const
+    {
+        if (start < other.start)
+            return true;
+        if (other.start < start)
+            return false;
+        if (start_dir < other.start_dir)
+            return true;
+        if (other.start_dir < start_dir)
+            return false;
+        if (finish < other.finish)
+            return true;
+        if (other.finish < finish)
+            return false;
+        return  false;
+        
+    }
+    Cell const start;
+    Direction const start_dir;
+    Cell const finish;
+};
+
 vector<Cell> GetClosestPath(const model::World& world,
                             Cell const & start, Direction const start_dir, Cell const & finish)
 {
+    
+    static map<cashe_key, vector<Cell> > cacshe;
+    
+    cashe_key ck = {start, start_dir, finish};
+    if (cacshe.count(ck) == 1)
+        return cacshe[ck];
+    
     MapT data;
     DSF(world.getTilesXY(), {start, start_dir}, {start, start_dir}, finish, data);
     //    PrintMap(world.getTilesXY(), data);
@@ -208,6 +239,7 @@ vector<Cell> GetClosestPath(const model::World& world,
     }
     res.push_back(start);
     reverse(res.begin(), res.end());
+    cacshe[ck] = res;
     return res;
 }
 
