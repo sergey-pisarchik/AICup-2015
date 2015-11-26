@@ -52,3 +52,34 @@ Direction GetDirection(Unit const & unit)
     return RIGHT;
     
 }
+
+std::pair<double, double> GetCornerCoords(Cell const & cell, int corner, Game const & game)
+{
+    double half = 0.5 * game.getTrackTileSize();
+    double centerX = (cell.m_x + 0.5) * game.getTrackTileSize();
+    double centerY = (cell.m_y + 0.5) * game.getTrackTileSize();
+    
+    pair<double, double> res = {centerX, centerY};
+    if (corner == 0)
+    {
+        res.first += half;
+        res.second += half;
+    }
+    if (corner == 1)
+    {
+        res.first -= half;
+        res.second += half;
+    }
+    if (corner == 2)
+    {
+        res.first += half;
+        res.second -= half;
+    }
+    if (corner == 3)
+    {
+        res.first -= half;
+        res.second -= half;
+    }
+    return res;
+    
+}
