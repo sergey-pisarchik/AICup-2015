@@ -161,7 +161,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         if ((bonus.getType() == PURE_SCORE || (bonus.getType() == REPAIR_KIT && self.getDurability() < 0.5 ))
             && self.getDistanceTo(bonus) < min_bonus_dist
             && IsOnPath(bonus, path, game, 2)
-            && FDeg(self.getAngleTo(bonus)) < 45)
+            && FDeg(self.getAngleTo(bonus)) < 25)
         {
             min_bonus_dist = self.getDistanceTo(bonus);
             nextWaypointX = bonus.getX();
