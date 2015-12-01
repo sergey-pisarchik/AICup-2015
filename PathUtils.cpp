@@ -296,12 +296,12 @@ int GetStraightLength(std::vector<Cell> const & path)
     return res;
 }
 
-bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & game)
+bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & game, int max_length)
 {
     auto targetCell = GetCell(unit, game);
-    for (auto const & cell: path)
+    for (size_t i = 0; i < path.size() && i <= max_length; ++i)
     {
-        if (targetCell == cell)
+        if (targetCell == path[i])
             return true;
     }
     return false;

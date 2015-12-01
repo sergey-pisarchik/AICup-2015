@@ -13,7 +13,7 @@ TileType GetCellType(TMap const & map, Cell const & cell);
 bool IsStraight(Car const & car, std::vector<Cell> const & path, int N, Game const & game, World const & world);
 int GetStraightLength(std::vector<Cell> const & path);
 
-bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & game);
+bool IsOnPath(Unit const & unit, std::vector<Cell> const & path, Game const & game, int max_length);
 
 bool Is180Turn(std::vector<Cell> const & path);
 

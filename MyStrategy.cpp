@@ -62,21 +62,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     if (m_bBackwardMove)
         return BackwardMove(self, world, game, move);
-    m_ForvardTick++;
-    
-    
-    double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
-    
-    
-    if (m_ForvardTick > 30 && world.getTick() > 230)
-        if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
-        {
-            m_bBackwardMove = true;
-            m_BacwardTick = BACWARD_DUR;
-            m_BackwardWheelAngle = -self.getWheelTurn();
-            return BackwardMove(self, world, game, move);
-        }
-    m_dPrevSpeed = speedModule;
+
     
     /////////
     // PATH
@@ -150,14 +136,14 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     
     int strightLength = GetStraightLength(path);
-    double min_bonus_dist = (strightLength - 1.5) * game.getTrackTileSize();
+    double min_bonus_dist = (strightLength - 1.5 ) * game.getTrackTileSize();
     if (strightLength > 2)
     {
         for (auto const & bonus: world.getBonuses())
         {
-            if (FDeg(self.getAngleTo(bonus)) < 10)
+            if (FDeg(self.getAngleTo(bonus)) < 15)
             {
-                if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game))
+                if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game, strightLength))
                 {
                     min_bonus_dist = self.getDistanceTo(bonus);
                     nextWaypointX = bonus.getX();
@@ -167,6 +153,23 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
             
         }
     }
+    
+    min_bonus_dist += 300;
+
+    for (auto const & bonus: world.getBonuses())
+    {
+        if ((bonus.getType() == PURE_SCORE || (bonus.getType() == REPAIR_KIT && self.getDurability() < 0.5 ))
+            && self.getDistanceTo(bonus) < min_bonus_dist
+            && IsOnPath(bonus, path, game, 2)
+            && FDeg(self.getAngleTo(bonus)) < 45)
+        {
+            min_bonus_dist = self.getDistanceTo(bonus);
+            nextWaypointX = bonus.getX();
+            nextWaypointY = bonus.getY();
+        }
+        
+    }
+    
     
     //////////
     // corner
@@ -192,10 +195,15 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     //    move.setWheelTurn(angleToWaypoint * 32.0 / PI);
     
     double MAX_ANGLE = 32.;
+    
+    double Wheel_turn = 0;
     if (FDeg(angleToWaypoint) > MAX_ANGLE)
-        move.setWheelTurn(angleToWaypoint > 0 ? 1 : -1);
+        Wheel_turn = (angleToWaypoint > 0 ? 1 : -1);
     else
-        move.setWheelTurn((1./MAX_ANGLE)*(1.15 * Deg(angleToWaypoint)));
+        Wheel_turn = ((1./MAX_ANGLE)*(1.15 * Deg(angleToWaypoint)));
+    
+    move.setWheelTurn(Wheel_turn);
+
     
     if (world.getTick() < 205)
         move.setEnginePower(0.25);
@@ -207,13 +215,13 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     //////////
     
     int straight_length = GetStraightLength(path);
-    if (straight_length >= 6 && world.getTick() > 220)
+    if (straight_length > 6 && world.getTick() > 220)
     {
         if (FDeg(angleToWaypoint) < 20)
             move.setUseNitro(true);
     }
     
-    if (self.getRemainingNitroTicks() == 1 && strightLength < 3)
+    if (self.getRemainingNitroTicks() == 1 && strightLength < 2)
         m_brakeAfteNitroTicks = 45;
     m_brakeAfteNitroTicks--;
     if (m_brakeAfteNitroTicks > 0)
@@ -257,6 +265,25 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     //                move.setBrake(true);
     //            }
     
+    
+    ////////
+    ///
+    ///////
+    m_ForvardTick++;
+    
+    
+    double speedModule = hypot(self.getSpeedX(), self.getSpeedY());
+    
+    
+    if (m_ForvardTick > 30 && world.getTick() > 230)
+        if (speedModule < 1e-1 && m_dPrevSpeed < 1e-1)
+        {
+            m_bBackwardMove = true;
+            m_BacwardTick = BACWARD_DUR;
+            m_BackwardWheelAngle = -Wheel_turn;
+            return BackwardMove(self, world, game, move);
+        }
+    m_dPrevSpeed = speedModule;
 }
 
 
@@ -277,13 +304,16 @@ void MyStrategy::BackwardMove(const model::Car& self, const model::World& world,
         if (m_BacwardTick < BACWARD_DUR / 3)
         {
             move.setEnginePower(1);
-            move.setWheelTurn(0);
+            move.setWheelTurn(m_BackwardWheelAngle);
             
         }
         else
-            move.setWheelTurn(0);
+            move.setWheelTurn(m_BackwardWheelAngle);
         if (m_BacwardTick < BACWARD_DUR / 6)
+        {
             move.setBrake(true);
+            move.setWheelTurn(0);
+        }
         
     }
 }
