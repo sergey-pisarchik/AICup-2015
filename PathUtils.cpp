@@ -125,29 +125,33 @@ bool CanPass(TMap const & map, Cell const & start, Direction const dir)
 //}
 
 typedef pair<Cell, Direction> MapKeyT;
-typedef std::map<MapKeyT, pair<int, MapKeyT>> MapT;
+typedef std::map<MapKeyT, pair<double, MapKeyT>> MapT;
 
 void DSF(TMap const & maze,
          MapKeyT const & cur, MapKeyT const & prev, Cell const & target,
-         MapT & data)
+         MapT & data, vector<vector<int>> const & bonuses)
 {
     bool IsOpposite = GetOppositeDirection(prev.second) == cur.second;
+    double to_add = (IsOpposite ? 3 : 1);
+    if (bonuses[cur.first.m_x][cur.first.m_y] == 1)
+        to_add -= 0.5;
+    
     bool need_update = data.count(cur) == 0;
-    need_update |= data[cur].first > data[prev].first + (IsOpposite ? 3 : 1);
+    need_update |= data[cur].first > data[prev].first + to_add;
     if (need_update)
     {
-        int prev_dist = data.count(prev) == 0 ? 0 : data[prev].first;
-        data[cur] = {prev_dist + (IsOpposite ? 3 : 1), prev};
+        double prev_dist = data.count(prev) == 0 ? 0 : data[prev].first;
+        data[cur] = {prev_dist + to_add, prev};
     }
     if (cur.first == target)
         return;
     if (need_update)
     {
         if (CanPass(maze, cur.first, cur.second))
-            DSF(maze, {cur.first.GetNeibor(cur.second), cur.second}, cur, target, data);
+            DSF(maze, {cur.first.GetNeibor(cur.second), cur.second}, cur, target, data, bonuses);
         for (auto const & dir: AllDirections())
             if (CanPass(maze, cur.first, dir))
-                DSF(maze, {cur.first.GetNeibor(dir), dir}, cur, target, data);
+                DSF(maze, {cur.first.GetNeibor(dir), dir}, cur, target, data, bonuses);
     }
 }
 
@@ -200,17 +204,34 @@ struct cashe_key
 };
 
 vector<Cell> GetClosestPath(const model::World& world,
-                            Cell const & start, Direction const start_dir, Cell const & finish)
+                            Cell const & start, Direction const start_dir, Cell const & finish, Game const & game)
 {
     
     static map<cashe_key, vector<Cell> > cacshe;
+    static int bonus_hash = 0;
+    int bonus_hash_cur = 0;
+    auto const & map = world.getTilesXY();
+    vector<vector<int>> bonuses(map.size(), vector<int>(map[0].size(), 0));
+    for (Bonus const & bonus: world.getBonuses())
+    {
+        bonus_hash_cur += bonus.getX() * bonus.getX() + bonus.getY() * bonus.getY();
+        auto bonus_cell= GetCell(bonus, game);
+        bonuses[bonus_cell.m_x][bonus_cell.m_y] = (bonus.getType() == PURE_SCORE || bonus.getType() == REPAIR_KIT) ? 1 : 0;
+    }
+    if (bonus_hash !=  bonus_hash_cur)
+    {
+        bonus_hash = bonus_hash_cur;
+        cacshe.clear();
+    }
+    
+    
     
     cashe_key ck = {start, start_dir, finish};
     if (cacshe.count(ck) == 1)
         return cacshe[ck];
     
     MapT data;
-    DSF(world.getTilesXY(), {start, start_dir}, {start, start_dir}, finish, data);
+    DSF(world.getTilesXY(), {start, start_dir}, {start, start_dir}, finish, data, bonuses);
     //    PrintMap(world.getTilesXY(), data);
     
     vector<Cell> res;

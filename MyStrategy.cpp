@@ -72,7 +72,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     Cell finish = {self.getNextWaypointX(), self.getNextWaypointY()};
     Cell start = curCell;
 
-    vector<Cell> path = GetClosestPath(world, start, GetDirection(self), finish);
+    vector<Cell> path = GetClosestPath(world, start, GetDirection(self), finish, game);
     
     Cell start2 = finish;
     auto nextWaypointIndex = self.getNextWaypointIndex() + 1;
@@ -85,7 +85,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         nextDir = GetDirection(path[path.size() - 2], path.back());
     }
     Cell finish2 = {world.getWaypoints()[nextWaypointIndex][0], world.getWaypoints()[nextWaypointIndex][1]};
-    vector<Cell> nextPath = GetClosestPath(world, start2, nextDir, finish2);
+    vector<Cell> nextPath = GetClosestPath(world, start2, nextDir, finish2, game);
     for (size_t i = 1; i < nextPath.size(); ++i)
         path.push_back(nextPath[i]);
     

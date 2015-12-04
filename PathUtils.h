@@ -6,7 +6,7 @@
 
 
 vector<Cell> GetClosestPath(const model::World& world,
-                            Cell const & start, Direction const start_dir, Cell const & finish);
+                            Cell const & start, Direction const start_dir, Cell const & finish, Game const & game);
 
 TileType GetCellType(TMap const & map, Cell const & cell);
 
