@@ -163,13 +163,13 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         double dist = self.getDistanceTo(bonus);
         if ((bonus.getType() == PURE_SCORE || (bonus.getType() == REPAIR_KIT && self.getDurability() < 0.5 ))
             && dist < min_bonus_dist
-            && IsOnPath(bonus, path, game, 2)
-            && FDeg(self.getAngleTo(bonus)) < 45)
+            && IsOnPath(bonus, path, game, 1)
+            && FDeg(self.getAngleTo(bonus)) < 30)
         {
             min_bonus_dist = self.getDistanceTo(bonus);
             nextWaypointX = bonus.getX();
             nextWaypointY = bonus.getY();
-            bNeed_brake_for_bonus =  FDeg(self.getAngleTo(bonus)) > 20;
+            bNeed_brake_for_bonus =  FDeg(self.getAngleTo(bonus)) > 20 && Speed(self) > 15;
         }
         
     }
