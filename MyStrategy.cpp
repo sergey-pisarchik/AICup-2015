@@ -136,12 +136,12 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     
     
     int strightLength = GetStraightLength(path);
-    double min_bonus_dist = (strightLength - 1.5 ) * game.getTrackTileSize();
+    double min_bonus_dist = (strightLength - 1 ) * game.getTrackTileSize();
     if (strightLength > 2)
     {
         for (auto const & bonus: world.getBonuses())
         {
-            if (FDeg(self.getAngleTo(bonus)) < 15)
+            if (FDeg(self.getAngleTo(bonus)) < 20)
             {
                 if (self.getDistanceTo(bonus) < min_bonus_dist && IsOnPath(bonus, path, game, strightLength))
                 {
@@ -154,21 +154,27 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
         }
     }
     
-    min_bonus_dist += 300;
+    min_bonus_dist += 700;
 
+    bool bNeed_brake_for_bonus = false;
     for (auto const & bonus: world.getBonuses())
     {
+        auto b_cell = GetCell(bonus,game);
+        double dist = self.getDistanceTo(bonus);
         if ((bonus.getType() == PURE_SCORE || (bonus.getType() == REPAIR_KIT && self.getDurability() < 0.5 ))
-            && self.getDistanceTo(bonus) < min_bonus_dist
+            && dist < min_bonus_dist
             && IsOnPath(bonus, path, game, 2)
-            && FDeg(self.getAngleTo(bonus)) < 25)
+            && FDeg(self.getAngleTo(bonus)) < 45)
         {
             min_bonus_dist = self.getDistanceTo(bonus);
             nextWaypointX = bonus.getX();
             nextWaypointY = bonus.getY();
+            bNeed_brake_for_bonus =  FDeg(self.getAngleTo(bonus)) > 20;
         }
         
     }
+    if (bNeed_brake_for_bonus)
+        move.setBrake(true);
     
     
     //////////
@@ -205,7 +211,7 @@ void MyStrategy::move(const Car& self, const World& world, const Game& game, Mov
     move.setWheelTurn(Wheel_turn);
 
     
-    if (world.getTick() < 205)
+    if (world.getTick() < 195)
         move.setEnginePower(0.25);
     else
         move.setEnginePower(1);
